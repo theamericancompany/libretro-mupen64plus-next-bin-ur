@@ -19,7 +19,7 @@
 [comment]: <> (License along with this program.)
 [comment]: <> (If not, see <https://www.gnu.org/licenses/>.)
 
-# `libretro-scummvm-bin`
+# `libretro-mupen64plus-next-bin`
 
 universal recipe for
 [user repo](

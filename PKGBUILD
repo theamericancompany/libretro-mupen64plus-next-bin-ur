@@ -43,17 +43,27 @@ if [[ ! -v "_evmfs" ]]; then
     _evmfs="false"
   fi
 fi
-_pkg="scummvm"
+if [[ ! -v "_gles3" ]]; then
+  _gles3="false"
+fi
+_pkg="mupen64plus-next"
 _pkgname="libretro-${_pkg}"
-_Pkg="scummvm"
-pkgname="${_pkgname}-bin"
+_Pkg="mupen64plus-next"
+pkgbase="${_pkgname}-bin"
+pkgname=(
+  "${_pkgname}-bin-gles2"
+)
+if [[ "${_gles3}" == "true" ]]; then
+  pkgname+=(
+    "${_pkgname}-bin-gles3"
+  )
+fi
 pkgver="0.139"
 pkgrel=1
 _pkgdesc=(
   "RetroArch backend for"
-  "the 2010 version of MAME"
-  "multi-purpose"
-  "emulation framework."
+  "the Mupen64Plus Next"
+  "Nintendo 64 emulator."
 )
 pkgdesc="${_pkgdesc[*]}"
 arch=(
@@ -100,7 +110,8 @@ conflicts=(
 )
 source=()
 sha256sums=()
-_lib="${_pkg}_libretro_android.so"
+_lib_gles2="mupen64plus_next_gles2_libretro_android.so"
+_lib_gles3="mupen64plus_next_gles3_libretro_android.so"
 # This file has been published onto Ethereum Holesky testnet.
 # That network may disappear sooner or later, so you'll have to crowd-publish it
 # onto mainnets download after download on the mainnets when crowd-publishing
@@ -108,16 +119,30 @@ _lib="${_pkg}_libretro_android.so"
 _evmfs_network="17000"
 _evmfs_address="0x151920938488F193735e83e052368cD41F9d9362"
 _evmfs_ns="0x926acb6aA4790ff678848A9F1C59E578B148C786"
-_lib_sum="95a0386521942df7d12a52298b0a8d30759236e870e48a3ffe4cfe964b8242a6"
+_lib_gles2_sum="4ee8f24e075cbfa87cd7b76519bb3522c55633f51291933701b2ec5758944344"
+_lib_gles3_sum="fc0cb49c5c0e07622a6f061c095dc3c4c95596904312796568c4a8def11fc1c6"
 _http="https://github.com"
 _ns="6xrS42VaMBgMbWRPAiVP"
 _url="${_http}/${_ns}/${pkgname}"
-_commit="cddc81620543e1533d99c6f20f074f36d33b0dca"
+_commit="171f10df1c118cac425e136727c6464c1b20046f"
+_evmfs_lib_gles2_uri="evmfs://${_evmfs_network}/${_evmfs_address}/${_evmfs_ns}/${_lib_gles2_sum}"
+_evmfs_lib_gles3_uri="evmfs://${_evmfs_network}/${_evmfs_address}/${_evmfs_ns}/${_lib_gles3_sum}"
 _evmfs_uri="evmfs://${_evmfs_network}/${_evmfs_address}/${_evmfs_ns}/${_lib_sum}"
+source=()
+sha256sums=()
 if [[ "${_evmfs}" == "true" ]]; then
-  _lib_src="${_lib}.tar.xz::${_evmfs_uri}"
+  _lib_gles2_src="${_lib_gles2}.tar.xz::${_evmfs_lib_gles2_uri}"
+  _lib_gles3_src="${_lib_gles3}.tar.xz::${_evmfs_lib_gles3_uri}"
+  if [[ "${_gles3}" == "true" ]]; then
+    source+=(
+      "${_lib_gles3_src}"
+    )
+    sha256sums+=(
+      "${_lib_gles3_sum}"
+    )
+  fi
 elif [[ "${_evmfs}" == "false" ]]; then
-  _lib_src="${_lib}.tar.xz::${_url}/raw/${_commit}/${_lib}.arm.tar.xz"
+  _lib_gles2_src="${_lib}.tar.xz::${_url}/raw/${_commit}/${_lib}.arm.tar.xz"
 fi
 source+=(
   "${_lib_src}"
@@ -135,7 +160,7 @@ validgpgkeys=(
   '12D8E3D7888F741E89F86EE0FEC8567A644F1D16'
 )
 
-package() {
+package-libretro-mupen64plus-next-sles2() {
   local \
     _dest_dir
   _dest_dir="/data/data/com.retroarch/cores"
