@@ -44,7 +44,7 @@ if [[ ! -v "_evmfs" ]]; then
   fi
 fi
 if [[ ! -v "_gles3" ]]; then
-  _gles3="false"
+  _gles3="true"
 fi
 _pkg="mupen64plus-next"
 _pkgname="libretro-${_pkg}"
@@ -191,7 +191,7 @@ validgpgkeys=(
   '12D8E3D7888F741E89F86EE0FEC8567A644F1D16'
 )
 
-package-libretro-mupen64plus-next-sles2() {
+package_libretro-mupen64plus-next-sles2() {
   local \
     _dest_dir
   _dest_dir="/data/data/com.retroarch/cores"
@@ -201,10 +201,10 @@ package-libretro-mupen64plus-next-sles2() {
   install \
     -Dm644 \
     "${srcdir}/${_lib_gles2}" \
-    "${pkgdir}/${_dest_dir}/${_lib}"
+    "${pkgdir}/${_dest_dir}/${_lib_gles2}"
 }
 
-package-libretro-mupen64plus-next-sles3() {
+package_libretro-mupen64plus-next-sles3() {
   local \
     _dest_dir
   _dest_dir="/data/data/com.retroarch/cores"
@@ -214,7 +214,7 @@ package-libretro-mupen64plus-next-sles3() {
   install \
     -Dm644 \
     "${srcdir}/${_lib_gles2}" \
-    "${pkgdir}/${_dest_dir}/${_lib}"
+    "${pkgdir}/${_dest_dir}/${_lib_gles3}"
 }
 
 
